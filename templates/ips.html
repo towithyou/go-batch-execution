@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>install Consul</title>
+</head>
+
+<body>
+<h1>{{.title}}</h1>
+
+
+<div style="float:left;"><textarea id="ctx" style="height:500px;width:400px;" placeholder="每个ip一行...">
+</textarea>
+    <div>
+        <button id="checkNet">检查网络</button>
+        <button id="installConsul" style="margin-left:250px">安装consul</button>
+    </div>
+</div>
+<div style="float:left; margin-left:200px">
+    <pre style="color: green" id="output"></pre>
+</div>
+
+
+</body>
+<script>
+    function buttonClick(url) {
+        if (ctx.value == "") {
+            alert("请输入ip...")
+            return
+        }
+        var ip = ctx.value.trim()
+        ip = ip.split("\n")
+        // var ip = ctx.value.split("\n")
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify(ip)
+        }).then(function (response) {
+            return response.json()
+        }).then(function (resp) {
+            console.log(resp)
+            document.getElementById("output").innerText = JSON.stringify(resp, null, 2)
+        })
+    }
+
+    checkNet.onclick = function () {
+        document.getElementById("output").innerText = ""
+        buttonClick("/check")
+    }
+    installConsul.onclick = function () {
+        document.getElementById("output").innerText = ""
+        buttonClick("/install")
+    }
+
+</script>
+</html>
